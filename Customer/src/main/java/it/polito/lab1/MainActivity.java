@@ -1,12 +1,18 @@
 package it.polito.lab1;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.content.Intent;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -78,7 +84,18 @@ public class MainActivity extends AppCompatActivity {
             tv = findViewById(R.id.addressText);
             tv.setText(address);
         }
-
+        String profilePicPref = preferences.getString("profileImage", null);
+        if (profilePicPref != null) {
+            Uri profilePicUri = Uri.parse(profilePicPref);
+            try {
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), profilePicUri);
+                RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                circularBitmapDrawable.setCircular(true);
+                ImageView imageView = findViewById(R.id.imageView);
+                imageView.setImageDrawable(circularBitmapDrawable);
+            } catch (Exception e) {
+            }
+        }
     }
 
 }
